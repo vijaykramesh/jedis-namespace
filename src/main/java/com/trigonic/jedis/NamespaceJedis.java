@@ -564,8 +564,9 @@ public class NamespaceJedis extends Jedis {
     }
 
     @Override
-    public Transaction multi() {
-        return wrapped.multi();
+    public NamespaceTransaction multi() {
+      getClient().multi();
+      return new NamespaceTransaction(namespace, getClient());
     }
 
     @Override

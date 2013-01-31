@@ -16,11 +16,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.Pipeline;
-import redis.clients.jedis.Response;
-import redis.clients.jedis.SortingParams;
-import redis.clients.jedis.ZParams;
+import redis.clients.jedis.*;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -119,15 +115,15 @@ public class NamespaceJedisTest {
         pipeline.set("bar", "2000");
         pipeline.set("baz", "3000");
         Response<Set<String>> response1 = pipeline.keys("*");
-        
+
         pipeline.del("foo");
         Response<String> response2 = pipeline.get("foo");
-        
+
         pipeline.del("bar", "baz");
         Response<String> response3 = pipeline.get("bar");
         Response<String> response4 = pipeline.get("baz");
         Response<Set<String>> response5 = pipeline.keys("*");
-        
+
         pipeline.sync();
 
         assertEquals(asSet("foo", "bar", "baz"), response1.get());
@@ -185,7 +181,7 @@ public class NamespaceJedisTest {
         namespaced.hmset("baz", asMap("key", "value", "key1", "value1", "a_number", "4"));
         assertEquals(asMap("key", "value", "key1", "value1", "a_number", "4"), namespaced.hgetAll("baz"));
     }
-    
+
     @Test
     public void shouldProperlyMoveMemberBetweenSets() {
         namespaced.sadd("foo", "1");
@@ -195,7 +191,7 @@ public class NamespaceJedisTest {
         namespaced.sadd("bar", "3");
         assertEquals(asSet("1", "2", "3"), namespaced.smembers("foo"));
         assertEquals(asSet("2", "3"), namespaced.smembers("bar"));
-        
+
         namespaced.smove("foo", "bar", "1");
         assertEquals(asSet("2", "3"), namespaced.smembers("foo"));
         assertEquals(asSet("1", "2", "3"), namespaced.smembers("bar"));
@@ -286,7 +282,7 @@ public class NamespaceJedisTest {
         namespaced.set("foo", "chris");
         assertEquals("chris", namespaced.get("foo"));
     }
-    
+
     @Test
     public void poolCanChangeItsNamespace() {
         assertNull(namespaced.get("foo"));
@@ -300,48 +296,48 @@ public class NamespaceJedisTest {
         assertNull(namespaced.get("foo"));
         namespaced.set("foo", "alice");
         assertEquals("alice", namespaced.get("foo"));
-        
+
         Jedis secondNamespaced = namespacedPool.getResource();
-        assertEquals("chris", secondNamespaced.get("foo"));        
-        assertEquals("alice", namespaced.get("foo"));       
-        
+        assertEquals("chris", secondNamespaced.get("foo"));
+        assertEquals("alice", namespaced.get("foo"));
+
         namespacedPool.returnResource(secondNamespaced);
     }
-    
+
     @Test
     public void shouldBeAbleToUseANamespaceWithAppend() {
         assertNull(namespaced.get("foo"));
-        
+
         namespaced.append("foo", "foo");
         namespaced.append("foo", "bar");
         assertEquals("foobar", namespaced.get("foo"));
         assertEquals("foobar", jedis.get("ns:foo"));
     }
-    
+
     @Test
     public void shouldBeAbleToUseANamespaceWithIncrDecr() {
         assertNull(namespaced.get("foo"));
 
         namespaced.incr("foo");
         assertEquals("1", namespaced.get("foo"));
-        
+
         namespaced.incrBy("foo", 3);
         assertEquals("4", namespaced.get("foo"));
-        
+
         namespaced.decr("foo");
         assertEquals("3", namespaced.get("foo"));
-        
+
         namespaced.decrBy("foo", 3);
         assertEquals("0", namespaced.get("foo"));
     }
-    
+
     @Test
     public void shouldBeAbleToUseANamespaceWithLists() {
         assertNull(namespaced.get("foo"));
-        
+
         namespaced.lpushx("foo", "bar");
         assertNull(namespaced.get("foo"));
-        
+
         namespaced.lpush("foo", "20");
         namespaced.lpush("foo", "10");
         namespaced.linsert("foo", AFTER, "20", "40");
@@ -349,7 +345,7 @@ public class NamespaceJedisTest {
         assertEquals(Long.valueOf(4), namespaced.llen("foo"));
         assertEquals("10", namespaced.lindex("foo", 0));
         assertEquals(asList("20", "30"), namespaced.lrange("foo", 1, 2));
-        
+
         namespaced.lset("foo", 0, "40");
         namespaced.lrem("foo", 1, "40");
         namespaced.ltrim("foo", 1, 2);
@@ -360,10 +356,10 @@ public class NamespaceJedisTest {
     public void shouldBeAbleToUseANamespaceWithListsPipelined() {
         Pipeline pipeline = namespaced.pipelined();
         Response<String> response1 = pipeline.get("foo");
-        
+
         pipeline.lpushx("foo", "bar");
         Response<String> response2 = pipeline.get("foo");
-        
+
         pipeline.lpush("foo", "20");
         pipeline.lpush("foo", "10");
         pipeline.linsert("foo", AFTER, "20", "40");
@@ -371,28 +367,28 @@ public class NamespaceJedisTest {
         Response<Long> response3 = pipeline.llen("foo");
         Response<String> response4 = pipeline.lindex("foo", 0);
         Response<List<String>> response5 = pipeline.lrange("foo", 1, 2);
-        
+
         pipeline.lset("foo", 0, "40");
         pipeline.lrem("foo", 1, "40");
         pipeline.ltrim("foo", 1, 2);
         Response<List<String>> response6 = pipeline.lrange("foo", 0, 3);
-        
+
         pipeline.sync();
-        
+
         assertNull(response1.get());
-        assertNull(response2.get());        
+        assertNull(response2.get());
         assertEquals(Long.valueOf(4), response3.get());
         assertEquals("10", response4.get());
         assertEquals(asList("20", "30"), response5.get());
         assertEquals(asList("30", "40"), response6.get());
     }
-    
+
     @Test
     public void canReturnAndCheckoutUsableResource() {
         namespaced.set("breadcrumb", "something");
         assertEquals("something", jedis.get("ns:breadcrumb"));
         namespacedPool.returnResource(namespaced);
-        
+
         namespaced = namespacedPool.getResource();
         assertEquals("something", namespaced.get("breadcrumb"));
     }
@@ -401,10 +397,19 @@ public class NamespaceJedisTest {
     public void canCheckoutMultipleUsableResource() {
         namespaced.set("breadcrumb", "somethingElse");
         assertEquals("somethingElse", jedis.get("ns:breadcrumb"));
-        
+
         Jedis other = namespacedPool.getResource();
         assertEquals("somethingElse", other.get("breadcrumb"));
         namespacedPool.returnResource(other);
+    }
+
+    @Test
+    public void canNamespaceInsideMulti() {
+      Transaction multi = namespaced.multi();
+      multi.set("breadcrumb", "somethingMulti");
+      multi.exec();
+
+      assertEquals("somethingMulti", jedis.get("ns:breadcrumb"));
     }
 
     protected static <T> Set<T> asSet(T... values) {
