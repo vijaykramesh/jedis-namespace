@@ -4,7 +4,7 @@ import redis.clients.jedis.*;
 
 import java.util.*;
 
-public class NamespaceTransaction extends Transaction {
+public class NamespaceTransaction extends Transaction implements NamespaceTransactionInterface {
   private NamespaceHandler namespace;
 
   public NamespaceTransaction(NamespaceHandler namespace) {
@@ -14,19 +14,18 @@ public class NamespaceTransaction extends Transaction {
   public NamespaceTransaction(NamespaceHandler namespace, final Client client) {
     super(client);
     this.namespace = namespace;
+
   }
 
   @Override
   public Response<Long> append(String key, String value) {
-    client.append(namespace.add(key), value);
-    return getResponse(BuilderFactory.LONG);
+    return append(client, namespace, key, value);
   }
 
-//  blpop and brpop override methods in redis.clients.jedis.Transaction that DO NOT ACTUALLY WORK
+
   @Override
   public Response<List<String>> blpop(String... args) {
-    client.blpop(namespace.add(args));
-    return getResponse(BuilderFactory.STRING_LIST);
+    return blpop(client, namespace, args);
   }
 
   @Override
@@ -188,8 +187,7 @@ public class NamespaceTransaction extends Transaction {
 
   @Override
   public Response<String> lindex(String key, int index) {
-    client.lindex(namespace.add(key), index);
-    return getResponse(BuilderFactory.STRING);
+    return lindex(client, namespace, key, index);
   }
 
   @Override
