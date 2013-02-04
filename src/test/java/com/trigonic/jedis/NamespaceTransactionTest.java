@@ -6,13 +6,14 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import redis.clients.jedis.*;
-import static redis.clients.jedis.BinaryClient.LIST_POSITION.AFTER;
-import static redis.clients.jedis.BinaryClient.LIST_POSITION.BEFORE;
+
 import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static redis.clients.jedis.BinaryClient.LIST_POSITION.AFTER;
+import static redis.clients.jedis.BinaryClient.LIST_POSITION.BEFORE;
 
 public class NamespaceTransactionTest {
   private Jedis jedis;
@@ -34,7 +35,7 @@ public class NamespaceTransactionTest {
   public void tearDown() {
     namespacedPool.returnResource(namespaced);
 
-    jedis.flushDB();
+//    jedis.flushDB();
     jedis.quit();
   }
 
@@ -392,6 +393,40 @@ public class NamespaceTransactionTest {
   }
 
 
+  @Test
+  public void multiBlock() {
+    List<Object> response = namespaced.multi(new NamespaceTransactionBlock(new NamespaceHandler("ns")) {
+      @Override
+      public void execute() {
+        sadd("foo", "a");
+        sadd("foo", "b");
+        scard("foo");
+      }
+    });
+
+    List<Object> expected = new ArrayList<Object>();
+    expected.add(1L);
+    expected.add(1L);
+    expected.add(2L);
+    assertEquals(expected, response);
+//
+//    // Binary
+//    response = jedis.multi(new TransactionBlock() {
+//      @Override
+//      public void execute() {
+//        sadd(bfoo, ba);
+//        sadd(bfoo, bb);
+//        scard(bfoo);
+//      }
+//    });
+//
+//    expected = new ArrayList<Object>();
+//    expected.add(1L);
+//    expected.add(1L);
+//    expected.add(2L);
+//    assertEquals(expected, response);
+
+  }
   protected static <T> Set<T> asSet(T... values) {
     return new HashSet<T>(asList(values));
   }

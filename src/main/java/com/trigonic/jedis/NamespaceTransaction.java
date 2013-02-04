@@ -7,6 +7,10 @@ import java.util.*;
 public class NamespaceTransaction extends Transaction {
   private NamespaceHandler namespace;
 
+  public NamespaceTransaction(NamespaceHandler namespace) {
+    super();
+    this.namespace = namespace;
+  }
   public NamespaceTransaction(NamespaceHandler namespace, final Client client) {
     super(client);
     this.namespace = namespace;
