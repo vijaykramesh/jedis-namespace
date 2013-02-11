@@ -312,14 +312,14 @@ public interface NamespaceTransactionInterface{
 
     private Client client;
     private NamespaceHandler namespace;
-    private NamespaceTransaction transaction;
+    private Transaction transaction;
 
-    public DefaultNamespaceTransaction(NamespaceTransaction transaction, NamespaceHandler namespace){
+    public DefaultNamespaceTransaction(Transaction transaction, NamespaceHandler namespace){
       this.namespace = namespace;
       this.transaction = transaction;
     }
 
-    public DefaultNamespaceTransaction(NamespaceTransaction transaction, Client client, NamespaceHandler namespace){
+    public DefaultNamespaceTransaction(Transaction transaction, Client client, NamespaceHandler namespace){
       this.transaction = transaction;
       this.client = client;
       this.namespace = namespace;
@@ -327,7 +327,14 @@ public interface NamespaceTransactionInterface{
 
     // TODO use reflection to get the actual getResponse method off of transaction
     public <T> Response<T> getTransactionResponse(Builder<T> builder) {
-      return transaction.getTResponse(builder);
+      if (transaction.getClass().getSimpleName().equals("NamespaceTransaction")) {
+        NamespaceTransaction t =  (NamespaceTransaction) transaction;
+        return t.getTResponse(builder);
+      } else {
+        NamespaceTransactionBlock t =  (NamespaceTransactionBlock) transaction;
+        return t.getTResponse(builder);
+      }
+
     }
 
     public Response<Long> append(String key, String value){

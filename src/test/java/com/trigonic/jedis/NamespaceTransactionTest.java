@@ -393,40 +393,25 @@ public class NamespaceTransactionTest {
   }
 
 
-//  @Test
-//  public void multiBlock() {
-//    List<Object> response = namespaced.multi(new NamespaceTransactionBlock(new NamespaceHandler("ns")) {
-//      @Override
-//      public void execute() {
-//        sadd("foo", "a");
-//        sadd("foo", "b");
-//        scard("foo");
-//      }
-//    });
-//
-//    List<Object> expected = new ArrayList<Object>();
-//    expected.add(1L);
-//    expected.add(1L);
-//    expected.add(2L);
-//    assertEquals(expected, response);
-////
-////    // Binary
-////    response = jedis.multi(new TransactionBlock() {
-////      @Override
-////      public void execute() {
-////        sadd(bfoo, ba);
-////        sadd(bfoo, bb);
-////        scard(bfoo);
-////      }
-////    });
-////
-////    expected = new ArrayList<Object>();
-////    expected.add(1L);
-////    expected.add(1L);
-////    expected.add(2L);
-////    assertEquals(expected, response);
-//
-//  }
+  @Test
+  public void multiBlock() {
+    List<Object> response = namespaced.multi(new NamespaceTransactionBlock(new NamespaceHandler("ns"), namespaced.getClient()) {
+      @Override
+      public void execute() {
+        sadd("foo", "a");
+        sadd("foo", "b");
+        scard("foo");
+      }
+    });
+
+    List<Object> expected = new ArrayList<Object>();
+    expected.add(1L);
+    expected.add(1L);
+    expected.add(2L);
+    assertEquals(expected, response);
+
+  }
+
   protected static <T> Set<T> asSet(T... values) {
     return new HashSet<T>(asList(values));
   }

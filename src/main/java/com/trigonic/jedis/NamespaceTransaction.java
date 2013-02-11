@@ -11,11 +11,6 @@ public class NamespaceTransaction extends Transaction {
 
   private DefaultNamespaceTransaction defaultNamespaceTransaction;
 
-  public NamespaceTransaction(NamespaceHandler namespace) {
-    super();
-    this.defaultNamespaceTransaction = new DefaultNamespaceTransaction(this, namespace);
-
-  }
   public NamespaceTransaction(NamespaceHandler namespace, final Client client) {
     super(client);
     this.defaultNamespaceTransaction = new DefaultNamespaceTransaction(this, client, namespace);
