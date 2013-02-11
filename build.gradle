@@ -3,7 +3,7 @@ apply plugin: 'nexus'
 apply plugin: 'eclipse'
 
 group = 'com.trigonic'
-version = '0.2-SNAPSHOT'
+version = '0.2.1-vijaykramesh'
 
 buildscript {
     repositories {
@@ -88,7 +88,9 @@ modifyPom {
     }
 }
 
+
+
 task createWrapper(type: Wrapper) {
-    gradleVersion = '1.2'
+    gradleVersion = '1.4'
 }
 

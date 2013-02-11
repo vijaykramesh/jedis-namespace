@@ -1,3 +1,8 @@
+classes
+.idea
+atlassian-ide-plugin.xml
+.gradletasknamecache
+jedis-namespace.iml
 .classpath
 .gradle
 .project

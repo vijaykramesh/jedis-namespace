@@ -1,27 +1,16 @@
 package com.trigonic.jedis;
 
+import redis.clients.jedis.BinaryClient.LIST_POSITION;
+import redis.clients.jedis.*;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import redis.clients.jedis.BinaryClient.LIST_POSITION;
-import redis.clients.jedis.BinaryJedisPubSub;
-import redis.clients.jedis.Client;
-import redis.clients.jedis.DebugParams;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisMonitor;
-import redis.clients.jedis.JedisPubSub;
-import redis.clients.jedis.Pipeline;
-import redis.clients.jedis.PipelineBlock;
-import redis.clients.jedis.SortingParams;
-import redis.clients.jedis.Transaction;
-import redis.clients.jedis.TransactionBlock;
-import redis.clients.jedis.Tuple;
-import redis.clients.jedis.ZParams;
-
 public class NamespaceJedis extends Jedis {
     private NamespaceHandler namespace;
     private Jedis wrapped;
+
 
     public NamespaceJedis(String namespace, Jedis jedis) {
         super((String) null);
@@ -564,13 +553,17 @@ public class NamespaceJedis extends Jedis {
     }
 
     @Override
-    public Transaction multi() {
-        return wrapped.multi();
+    public NamespaceTransaction multi() {
+      getClient().multi();
+      return new NamespaceTransaction(namespace, getClient());
     }
 
+   /**
+   * Must use a {@link TransactionBlock} derived from {@link NamespaceTransactionBlock} for namespaces to be honored here!
+   */
     @Override
     public List<Object> multi(TransactionBlock jedisTransaction) {
-        return wrapped.multi(jedisTransaction);
+        return wrapped.multi((jedisTransaction));
     }
 
     @Override
