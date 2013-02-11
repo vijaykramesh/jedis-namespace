@@ -11,6 +11,7 @@ public class NamespaceJedis extends Jedis {
     private NamespaceHandler namespace;
     private Jedis wrapped;
 
+
     public NamespaceJedis(String namespace, Jedis jedis) {
         super((String) null);
         this.namespace = new NamespaceHandler(namespace);

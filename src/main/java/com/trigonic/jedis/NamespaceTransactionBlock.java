@@ -12,13 +12,13 @@ public abstract class NamespaceTransactionBlock extends TransactionBlock{
 
   public NamespaceTransactionBlock( NamespaceHandler namespace) {
     super();
-    this.defaultNamespaceTransaction = new NamespaceTransactionInterface.DefaultNamespaceTransaction(this, namespace);
+    this.defaultNamespaceTransaction = new JedisInterface.NamespaceTransactionImplementation(this, namespace);
 
   }
 
   public NamespaceTransactionBlock( NamespaceHandler namespace, Client client) {
     super(client);
-    this.defaultNamespaceTransaction = new NamespaceTransactionInterface.DefaultNamespaceTransaction(this, client, namespace);
+    this.defaultNamespaceTransaction = new JedisInterface.NamespaceTransactionImplementation(this, client, namespace);
 
   }
 
@@ -30,7 +30,7 @@ public abstract class NamespaceTransactionBlock extends TransactionBlock{
     this.defaultNamespaceTransaction.setClient(client);
   }
 
-  private NamespaceTransactionInterface.DefaultNamespaceTransaction defaultNamespaceTransaction;
+  private JedisInterface.NamespaceTransactionImplementation defaultNamespaceTransaction;
 
   @Override
   public Response<Long> append(String key, String value) {

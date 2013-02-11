@@ -1,6 +1,5 @@
 package com.trigonic.jedis;
 
-import com.trigonic.jedis.NamespaceTransactionInterface.DefaultNamespaceTransaction;
 import redis.clients.jedis.*;
 
 import java.util.List;
@@ -9,11 +8,11 @@ import java.util.Set;
 
 public class NamespaceTransaction extends Transaction {
 
-  private DefaultNamespaceTransaction defaultNamespaceTransaction;
+  private JedisInterface.NamespaceTransactionImplementation defaultNamespaceTransaction;
 
   public NamespaceTransaction(NamespaceHandler namespace, final Client client) {
     super(client);
-    this.defaultNamespaceTransaction = new DefaultNamespaceTransaction(this, client, namespace);
+    this.defaultNamespaceTransaction = new JedisInterface.NamespaceTransactionImplementation(this, client, namespace);
   }
 
   @Override
