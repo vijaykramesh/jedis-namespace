@@ -42,7 +42,6 @@ public class NamespaceTransactionTest {
   @Test
   public void shouldBeAbleToUseANamespaceWithinMulti() {
     transaction = namespaced.multi();
-    System.out.println(transaction.toString());
     Response<String> nsFoo = transaction.get("foo");
     transaction.exec();
 
