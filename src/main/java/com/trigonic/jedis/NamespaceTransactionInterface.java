@@ -315,15 +315,19 @@ public interface NamespaceTransactionInterface{
     private NamespaceHandler namespace;
     private Transaction transaction;
 
-    public DefaultNamespaceTransaction(Transaction transaction, NamespaceHandler namespace){
-      this.namespace = namespace;
-      this.transaction = transaction;
-    }
-
     public DefaultNamespaceTransaction(Transaction transaction, Client client, NamespaceHandler namespace){
       this.transaction = transaction;
       this.client = client;
       this.namespace = namespace;
+    }
+
+    public DefaultNamespaceTransaction(Transaction transaction, NamespaceHandler namespace){
+      this.transaction = transaction;
+      this.namespace = namespace;
+    }
+
+    public void setClient(Client client) {
+      this.client = client;
     }
 
     public <T> Response<T> getTransactionResponse(Builder<T> builder) {

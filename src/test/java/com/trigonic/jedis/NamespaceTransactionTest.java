@@ -395,7 +395,7 @@ public class NamespaceTransactionTest {
 
   @Test
   public void multiBlock() {
-    List<Object> response = namespaced.multi(new NamespaceTransactionBlock(new NamespaceHandler("ns"), namespaced.getClient()) {
+    List<Object> response = namespaced.multi(new NamespaceTransactionBlock(new NamespaceHandler("ns")) {
       @Override
       public void execute() {
         sadd("foo", "a");

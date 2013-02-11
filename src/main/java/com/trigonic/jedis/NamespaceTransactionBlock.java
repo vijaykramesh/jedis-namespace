@@ -9,6 +9,13 @@ import java.util.Set;
 
 
 public abstract class NamespaceTransactionBlock extends TransactionBlock{
+
+  public NamespaceTransactionBlock( NamespaceHandler namespace) {
+    super();
+    this.defaultNamespaceTransaction = new NamespaceTransactionInterface.DefaultNamespaceTransaction(this, namespace);
+
+  }
+
   public NamespaceTransactionBlock( NamespaceHandler namespace, Client client) {
     super(client);
     this.defaultNamespaceTransaction = new NamespaceTransactionInterface.DefaultNamespaceTransaction(this, client, namespace);
@@ -19,8 +26,8 @@ public abstract class NamespaceTransactionBlock extends TransactionBlock{
   public abstract void execute() throws JedisException;
 
   public void setClient(Client client) {
-
     this.client = client;
+    this.defaultNamespaceTransaction.setClient(client);
   }
 
 
