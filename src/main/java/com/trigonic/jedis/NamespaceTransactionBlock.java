@@ -30,7 +30,6 @@ public abstract class NamespaceTransactionBlock extends TransactionBlock{
     this.defaultNamespaceTransaction.setClient(client);
   }
 
-
   private NamespaceTransactionInterface.DefaultNamespaceTransaction defaultNamespaceTransaction;
 
   @Override

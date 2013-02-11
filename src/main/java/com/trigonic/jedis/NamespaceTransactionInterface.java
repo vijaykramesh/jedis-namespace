@@ -8,308 +8,307 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+public interface NamespaceTransactionInterface<L, LS, B, S, MSS, SS, ST, D>{
 
-public interface NamespaceTransactionInterface{
+  public L append(String key, String value);
 
-// todo generics properly here
 
-  public Response<Long> append(String key, String value);
+  public LS blpop(String... args);
 
 
-  public Response<List<String>> blpop(String... args);
+  public LS brpop(String... args);
 
 
-  public Response<List<String>> brpop(String... args);
+  public L decr(String key);
 
 
-  public Response<Long> decr(String key);
+  public L decrBy(String key, long integer);
 
 
-  public Response<Long> decrBy(String key, long integer);
+  public L del(String... keys);
 
 
-  public Response<Long> del(String... keys);
+  public B exists(String key);
 
 
-  public Response<Boolean> exists(String key);
+  public L expire(String key, int seconds);
 
 
-  public Response<Long> expire(String key, int seconds);
+  public L expireAt(String key, long unixTime);
 
 
-  public Response<Long> expireAt(String key, long unixTime);
+  public S get(String key);
 
 
-  public Response<String> get(String key);
+  public B getbit(String key, long offset);
 
 
-  public Response<Boolean> getbit(String key, long offset);
+  public S getrange(String key, long startOffset, long endOffset);
 
 
-  public Response<String> getrange(String key, long startOffset, long endOffset);
+  public S getSet(String key, String value);
 
 
-  public Response<String> getSet(String key, String value);
+  public L hdel(String key, String field);
 
 
-  public Response<Long> hdel(String key, String field);
+  public B hexists(String key, String field);
 
 
-  public Response<Boolean> hexists(String key, String field);
+  public S hget(String key, String field);
 
 
-  public Response<String> hget(String key, String field);
+  public MSS hgetAll(String key);
 
 
-  public Response<Map<String, String>> hgetAll(String key);
+  public L hincrBy(String key, String field, long value);
 
 
-  public Response<Long> hincrBy(String key, String field, long value);
+  public SS hkeys(String key);
 
 
-  public Response<Set<String>> hkeys(String key);
+  public L hlen(String key);
 
 
-  public Response<Long> hlen(String key);
+  public LS hmget(String key, String... fields);
 
 
-  public Response<List<String>> hmget(String key, String... fields);
+  public S hmset(String key, Map<String, String> hash);
 
 
-  public Response<String> hmset(String key, Map<String, String> hash);
+  public L hset(String key, String field, String value);
 
 
-  public Response<Long> hset(String key, String field, String value);
+  public L hsetnx(String key, String field, String value);
 
 
-  public Response<Long> hsetnx(String key, String field, String value);
+  public LS hvals(String key);
 
 
-  public Response<List<String>> hvals(String key);
+  public L incr(String key);
 
 
-  public Response<Long> incr(String key);
+  public L incrBy(String key, long integer);
 
 
-  public Response<Long> incrBy(String key, long integer);
+  public SS keys(String pattern);
 
 
-  public Response<Set<String>> keys(String pattern);
+  public S lindex(String key, int index);
 
 
-  public Response<String> lindex(String key, int index);
+  public L linsert(String key, BinaryClient.LIST_POSITION where, String pivot, String value);
 
 
-  public Response<Long> linsert(String key, BinaryClient.LIST_POSITION where, String pivot, String value);
+  public L llen(String key);
 
 
-  public Response<Long> llen(String key);
+  public S lpop(String key);
 
 
-  public Response<String> lpop(String key);
+  public L lpush(String key, String string);
 
 
-  public Response<Long> lpush(String key, String string);
+  public L lpushx(String key, String string);
 
 
-  public Response<Long> lpushx(String key, String string);
+  public LS lrange(String key, long start, long end);
 
 
-  public Response<List<String>> lrange(String key, long start, long end);
+  public L lrem(String key, long count, String value);
 
 
-  public Response<Long> lrem(String key, long count, String value);
+  public S lset(String key, long index, String value);
 
 
-  public Response<String> lset(String key, long index, String value);
+  public S ltrim(String key, long start, long end);
 
 
-  public Response<String> ltrim(String key, long start, long end);
+  public LS mget(String... keys);
 
 
-  public Response<List<String>> mget(String... keys);
+  public L move(String key, int dbIndex);
 
 
-  public Response<Long> move(String key, int dbIndex);
+  public S mset(String... keysvalues);
 
 
-  public Response<String> mset(String... keysvalues);
+  public L msetnx(String... keysvalues);
 
 
-  public Response<Long> msetnx(String... keysvalues);
+  public L persist(String key);
 
 
-  public Response<Long> persist(String key);
+  public S rename(String oldkey, String newkey);
 
 
-  public Response<String> rename(String oldkey, String newkey);
+  public L renamenx(String oldkey, String newkey);
 
 
-  public Response<Long> renamenx(String oldkey, String newkey);
+  public S rpop(String key);
 
 
-  public Response<String> rpop(String key);
+  public S rpoplpush(String srckey, String dstkey);
 
 
-  public Response<String> rpoplpush(String srckey, String dstkey);
+  public L rpush(String key, String string);
 
 
-  public Response<Long> rpush(String key, String string);
+  public L rpushx(String key, String string);
 
 
-  public Response<Long> rpushx(String key, String string);
+  public L sadd(String key, String member);
 
 
-  public Response<Long> sadd(String key, String member);
+  public L scard(String key);
 
 
-  public Response<Long> scard(String key);
+  public SS sdiff(String... keys);
 
 
-  public Response<Set<String>> sdiff(String... keys);
+  public L sdiffstore(String dstkey, String... keys);
 
 
-  public Response<Long> sdiffstore(String dstkey, String... keys);
+  public S set(String key, String value);
 
 
-  public Response<String> set(String key, String value);
+  public B setbit(String key, long offset, boolean value);
 
 
-  public Response<Boolean> setbit(String key, long offset, boolean value);
+  public S setex(String key, int seconds, String value);
 
 
-  public Response<String> setex(String key, int seconds, String value);
+  public L setnx(String key, String value);
 
 
-  public Response<Long> setnx(String key, String value);
+  public L setrange(String key, long offset, String value);
 
 
-  public Response<Long> setrange(String key, long offset, String value);
+  public SS sinter(String... keys);
 
 
-  public Response<Set<String>> sinter(String... keys);
+  public L sinterstore(String dstkey, String... keys);
 
 
-  public Response<Long> sinterstore(String dstkey, String... keys);
+  public B sismember(String key, String member);
 
 
-  public Response<Boolean> sismember(String key, String member);
+  public SS smembers(String key);
 
 
-  public Response<Set<String>> smembers(String key);
+  public L smove(String srckey, String dstkey, String member);
 
 
-  public Response<Long> smove(String srckey, String dstkey, String member);
+  public LS sort(String key);
 
 
-  public Response<List<String>> sort(String key);
+  public LS sort(String key, SortingParams sortingParameters);
 
 
-  public Response<List<String>> sort(String key, SortingParams sortingParameters);
+  public LS sort(String key, SortingParams sortingParameters, String dstkey);
 
 
-  public Response<List<String>> sort(String key, SortingParams sortingParameters, String dstkey);
+  public LS sort(String key, String dstkey);
 
 
-  public Response<List<String>> sort(String key, String dstkey);
+  public S spop(String key);
 
 
-  public Response<String> spop(String key);
+  public S srandmember(String key);
 
 
-  public Response<String> srandmember(String key);
+  public L srem(String key, String member);
 
 
-  public Response<Long> srem(String key, String member);
+  public L strlen(String key);
 
 
-  public Response<Long> strlen(String key);
+  public S substr(String key, int start, int end);
 
 
-  public Response<String> substr(String key, int start, int end);
+  public SS sunion(String... keys);
 
 
-  public Response<Set<String>> sunion(String... keys);
+  public L sunionstore(String dstkey, String... keys);
 
 
-  public Response<Long> sunionstore(String dstkey, String... keys);
+  public L ttl(String key);
 
 
-  public Response<Long> ttl(String key);
+  public S type(String key);
 
 
-  public Response<String> type(String key);
+  public L zadd(String key, double score, String member);
 
 
-  public Response<Long> zadd(String key, double score, String member);
+  public L zcard(String key);
 
 
-  public Response<Long> zcard(String key);
+  public L zcount(String key, double min, double max);
 
 
-  public Response<Long> zcount(String key, double min, double max);
+  public D zincrby(String key, double score, String member);
 
 
-  public Response<Double> zincrby(String key, double score, String member);
+  public L zinterstore(String dstkey, String... sets);
 
 
-  public Response<Long> zinterstore(String dstkey, String... sets);
+  public L zinterstore(String dstkey, ZParams params, String... sets);
 
 
-  public Response<Long> zinterstore(String dstkey, ZParams params, String... sets);
+  public SS zrange(String key, int start, int end);
 
 
-  public Response<Set<String>> zrange(String key, int start, int end);
+  public SS zrangeByScore(String key, double min, double max);
 
 
-  public Response<Set<String>> zrangeByScore(String key, double min, double max);
+  public SS zrangeByScore(String key, String min, String max);
 
 
-  public Response<Set<String>> zrangeByScore(String key, String min, String max);
+   public SS zrangeByScore(String key, double min, double max, int offset, int count);
 
+  public ST zrangeByScoreWithScores(String key, double min, double max);
 
-   public Response<Set<String>> zrangeByScore(String key, double min, double max, int offset, int count);
 
-  public Response<Set<Tuple>> zrangeByScoreWithScores(String key, double min, double max);
+  public ST zrangeByScoreWithScores(String key, double min, double max, int offset, int count);
 
 
-  public Response<Set<Tuple>> zrangeByScoreWithScores(String key, double min, double max, int offset, int count);
+  public ST zrangeWithScores(String key, int start, int end);
 
 
-  public Response<Set<Tuple>> zrangeWithScores(String key, int start, int end);
+  public L zrank(String key, String member);
 
 
-  public Response<Long> zrank(String key, String member);
+  public L zrem(String key, String member);
 
 
-  public Response<Long> zrem(String key, String member);
+  public L zremrangeByRank(String key, int start, int end);
 
 
-  public Response<Long> zremrangeByRank(String key, int start, int end);
+  public L zremrangeByScore(String key, double start, double end);
 
 
-  public Response<Long> zremrangeByScore(String key, double start, double end);
+  public SS zrevrange(String key, int start, int end);
 
 
-  public Response<Set<String>> zrevrange(String key, int start, int end);
+  public ST zrevrangeWithScores(String key, int start, int end);
 
 
-  public Response<Set<Tuple>> zrevrangeWithScores(String key, int start, int end);
+  public L zrevrank(String key, String member);
 
 
-  public Response<Long> zrevrank(String key, String member);
+  public D zscore(String key, String member);
 
 
-  public Response<Double> zscore(String key, String member);
+  public L zunionstore(String dstkey, String... sets);
 
 
-  public Response<Long> zunionstore(String dstkey, String... sets);
+  public L zunionstore(String dstkey, ZParams params, String... sets);
 
 
-  public Response<Long> zunionstore(String dstkey, ZParams params, String... sets);
+  public class DefaultNamespaceTransaction extends Queable implements NamespaceTransactionInterface <Response<Long>, Response<List<String>>, Response<Boolean>, Response<String>, Response<Map<String, String>>, Response<Set<String>>, Response<Set<Tuple>>, Response<Double>>
 
-
-  public class DefaultNamespaceTransaction extends Queable implements NamespaceTransactionInterface{
+  {
 
     private Client client;
     private NamespaceHandler namespace;
