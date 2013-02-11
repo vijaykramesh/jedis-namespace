@@ -26,13 +26,6 @@ public abstract class NamespaceTransactionBlock extends TransactionBlock{
 
   private NamespaceTransactionInterface.DefaultNamespaceTransaction defaultNamespaceTransaction;
 
-
-  // NamespaceTransactionInterface uses this to pass on getReponse to the right Queuable instance
-  // TODO replace with reflection, but not currently working.
-  public <T> Response<T> getTResponse(Builder<T> builder) {
-    return getResponse(builder);
-  }
-
   @Override
   public Response<Long> append(String key, String value) {
     return defaultNamespaceTransaction.append(key, value);

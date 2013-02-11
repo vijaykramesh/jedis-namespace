@@ -3,6 +3,7 @@ package com.trigonic.jedis;
 
 import redis.clients.jedis.*;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -325,16 +326,14 @@ public interface NamespaceTransactionInterface{
       this.namespace = namespace;
     }
 
-    // TODO use reflection to get the actual getResponse method off of transaction
     public <T> Response<T> getTransactionResponse(Builder<T> builder) {
-      if (transaction.getClass().getSimpleName().equals("NamespaceTransaction")) {
-        NamespaceTransaction t =  (NamespaceTransaction) transaction;
-        return t.getTResponse(builder);
-      } else {
-        NamespaceTransactionBlock t =  (NamespaceTransactionBlock) transaction;
-        return t.getTResponse(builder);
+      try {
+        Method getResponseMethod = Queable.class.getDeclaredMethod("getResponse", Builder.class);
+        getResponseMethod.setAccessible(true);
+        return (Response<T>) getResponseMethod.invoke(transaction, builder);
+      }catch (Exception e){
+        return null;
       }
-
     }
 
     public Response<Long> append(String key, String value){
