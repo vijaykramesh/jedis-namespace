@@ -19,8 +19,14 @@ public class NamespaceHandler {
 
     public NamespaceHandler(String namespace) {
         this.namespace = namespace;
-        prefix = namespace + ":";
-        binaryPrefix = SafeEncoder.encode(prefix);        
+
+        if (namespace == null || namespace.equals("")) {
+          prefix = "";
+        } else {
+          prefix = namespace + ":";
+        }
+
+        binaryPrefix = SafeEncoder.encode(prefix);
     }
     
     public String get() {
